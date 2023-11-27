@@ -1,0 +1,6 @@
+if (UserSession.getInstance().isLoggedIn()) {
+    String username = UserSession.getInstance().getLoggedInUser();
+    System.out.println("User " + username + " is logged in.");
+} else {
+    System.out.println("No user is currently logged in.");
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.caccounts.BankAccountController">
+<TabPane tabClosingPolicy="UNAVAILABLE">
+    <!-- Tab 1: Amount -->
+    <Tab text="Amount">
+        <VBox>
+            <Label text="Amount: $1000.00" />
+            <!-- Add other amount-related components here -->
+        </VBox>
+    </Tab>
+
+    <!-- Tab 2: Currency -->
+    <Tab text="Currency">
+        <VBox>
+            <Label text="Currency: USD" />
+            <!-- Add other currency-related components here -->
+        </VBox>
+    </Tab>
+
+    <!-- Tab 3: Other Information -->
+    <Tab text="Other Information">
+        <VBox>
+            <Label text="Other information goes here" />
+            <!-- Add other information-related components here -->
+        </VBox>
+    </Tab>
+</TabPane>
+</VBox>
