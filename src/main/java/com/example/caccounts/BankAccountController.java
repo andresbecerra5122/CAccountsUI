@@ -5,10 +5,30 @@ import com.CAccounts.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+import java.util.Map;
+
 public class BankAccountController {
 
     @FXML
     private Label welcomeLabel;
+
+    @FXML
+    private Label checkingBalanceLabel;
+
+    @FXML
+    private Label checkingCurrencyLabel;
+
+    @FXML
+    private Label convertBalanceLabel;
+
+    @FXML
+    private Label convertCurrencyLabel;
+
+    @FXML
+    private Label savingsBalanceLabel;
+
+    @FXML
+    private Label savingsCurrencyLabel;
 
 
     public void initialize() {
@@ -17,11 +37,22 @@ public class BankAccountController {
         // Load account information based on the logged-in user
         String loggedInUser = UserSession.getInstance().getLoggedInUser();
 
-        // For example, you might have a service that retrieves account information
-        double amount = 1000.00; // Replace with actual logic to get the amount
-        String currency = "USD"; // Replace with actual logic to get the currency
+        Map<String, BankAccount> accountData = BankAccountData.getAccountData();
 
-        //amountLabel.setText("Amount: $" + amount);
-        //currencyLabel.setText("Currency: " + currency);
+        // Get accounts for the logged-in user
+        CheckingAccount checkingAccount = (CheckingAccount) accountData.get("Checking");
+        ConvertAccount convertAccount = (ConvertAccount) accountData.get("Convert");
+        SavingsAccount savingsAccount = (SavingsAccount) accountData.get("Savings");
+
+        // Set balance and currency labels
+        checkingBalanceLabel.setText("Balance: $" + checkingAccount.getBalance());
+        checkingCurrencyLabel.setText("Currency: " + checkingAccount.getCurrency());
+
+        convertBalanceLabel.setText("Balance: $" + convertAccount.getBalance());
+        convertCurrencyLabel.setText("Currency: " + convertAccount.getCurrency());
+
+        savingsBalanceLabel.setText("Balance: $" + savingsAccount.getBalance());
+        savingsCurrencyLabel.setText("Currency: " + savingsAccount.getCurrency());
+
     }
 }
