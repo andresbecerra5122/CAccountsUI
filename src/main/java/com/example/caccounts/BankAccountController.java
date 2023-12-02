@@ -3,8 +3,15 @@ package com.example.caccounts;
 
 import com.CAccounts.UserSession;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class BankAccountController {
@@ -54,5 +61,35 @@ public class BankAccountController {
         savingsBalanceLabel.setText("Balance: $" + savingsAccount.getBalance());
         savingsCurrencyLabel.setText("Currency: " + savingsAccount.getCurrency());
 
+    }
+
+    @FXML
+    private void handleSignOut() {
+        // You can perform any additional cleanup or logic before signing out
+
+        // Close the current BankAccountUI window
+        Stage currentStage = (Stage) checkingBalanceLabel.getScene().getWindow();
+        currentStage.close();
+
+        // Open the login window
+        openLoginWindow();
+    }
+
+    private void openLoginWindow() {
+        try {
+            // Load the LoginUI.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage and set the scene
+            Stage stage = new Stage();
+            stage.setTitle("Login");
+            stage.setScene(new Scene(root));
+
+            // Show the login window
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
