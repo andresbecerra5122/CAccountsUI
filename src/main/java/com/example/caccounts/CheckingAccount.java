@@ -22,16 +22,12 @@ public class CheckingAccount extends BankAccount {
         }
     }
 
-    public void convertToConvert(double amount, String currency,
+    public void convertToConvert(double amount,
                                  ConvertAccount convertAccount)
     {
-        if(convertAccount.getCurrency() == currency)
-        {
-           convertAccount.convertToCurrency(amount,currency);
-        }
-        else {
-            System.out.println("Not Same Currency as Current Currency for ConvertAccount, \n" +
-                    "Please empty the convert account or change the currency inside the convert account");
-        }
+           withdraw(amount);
+           convertAccount.convertToCurrency(amount,getCurrency());
     }
+
+
 }

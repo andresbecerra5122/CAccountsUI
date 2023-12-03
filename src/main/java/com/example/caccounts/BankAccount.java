@@ -24,12 +24,12 @@ public class BankAccount {
         System.out.println("Deposit made. Current balance: " + balance);
     }
 
-    public void withdraw(double amount) {
+    public boolean withdraw(double amount) {
         if (amount <= balance) {
             balance -= amount;
-            System.out.println("Withdrawal made. Current balance: " + balance);
+            return true;
         } else {
-            System.out.println("Insufficient funds.");
+           return false;
         }
     }
 
