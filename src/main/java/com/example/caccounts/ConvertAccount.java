@@ -1,7 +1,5 @@
 package com.example.caccounts;
 
-import com.CAccounts.UserSession;
-
 public class ConvertAccount extends BankAccount {
 
     private Converter converter;
@@ -28,11 +26,11 @@ public class ConvertAccount extends BankAccount {
         }
     }
 
-    public void convertToCurrency(double amount, String targetCurrency) {
-        double convertedAmount = converter.convert(amount, getCurrency(), targetCurrency);
-        setBalance(getBalance() + amount);
+    public void convertToCurrency(double amount, String comingCurrency) {
+        double convertedAmount = converter.convert(amount, comingCurrency, getCurrency());
+        setBalance(getBalance() + convertedAmount);
         System.out.println("Conversion made. Amount converted: " + amount + " " + getCurrency() +
-                " to " + convertedAmount + " " + targetCurrency + ". Current balance: " + getBalance() + " " + getCurrency());
+                " to " + convertedAmount + " " + comingCurrency + ". Current balance: " + getBalance() + " " + getCurrency());
     }
 
     public void receiveFundsFromChecking(double amount, String checkingCurrency) {
@@ -44,5 +42,11 @@ public class ConvertAccount extends BankAccount {
 
         System.out.println("Funds received from CheckingAccount: " + convertedAmount + " " + getCurrency() +
                 ". Current balance: " + getBalance() + " " + getCurrency());
+    }
+
+    public double getConvertedAmount(double amount, String currency) {
+
+        return converter.convert(amount, currency, getCurrency());
+
     }
 }
