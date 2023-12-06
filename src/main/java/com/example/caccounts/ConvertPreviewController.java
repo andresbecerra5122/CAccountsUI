@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class ConvertPreviewController {
 
     @FXML
@@ -37,7 +39,12 @@ public class ConvertPreviewController {
     @FXML
     private void proceedWithConversion() {
         // Call the convertToConvert method in CheckingAccount
-        checkingAccount.convertToConvert(Amount, convertAccount);
+        if(Objects.equals(toAccount, "ToChecking")){
+            convertAccount.convertToChecking(Amount,checkingAccount);
+        }else{
+            checkingAccount.convertToConvert(Amount, convertAccount);
+        }
+
 
         // Notify the main window about the successful transaction and updated balance
         if (transactionListener != null) {
@@ -52,5 +59,11 @@ public class ConvertPreviewController {
         // Close the current window
         Stage stage = (Stage) previewLabel.getScene().getWindow();
         stage.close();
+    }
+
+    private String toAccount;
+
+    public void setToAccount(String toAccount) {
+        this.toAccount = toAccount;
     }
 }

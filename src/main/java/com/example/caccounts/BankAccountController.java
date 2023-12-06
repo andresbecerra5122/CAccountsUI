@@ -16,7 +16,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class BankAccountController implements TransactionListener {
-
+    @FXML
+    public CheckBox currencyConversionCheckBox;
     @FXML
     private Label checkingBalanceLabel;
 
@@ -58,6 +59,12 @@ public class BankAccountController implements TransactionListener {
     private CheckBox enableConvertCheckbox;
     @FXML
     private Button convertButton;
+    @FXML
+    private CheckBox enableConvertCheckingCheckbox;
+    @FXML
+    private TextField convertCheckingAmountField;
+    @FXML
+    private Button convertCheckingButton;
 
 
     public void initialize() {
@@ -154,11 +161,20 @@ public class BankAccountController implements TransactionListener {
         transferButton.setDisable(!isCheckboxSelected);
     }
 
+    @FXML
+    private void handleCheckboxCheckingActionConvert() {
+        // Enable or disable the TextField and Button based on the checkbox state
+        boolean isCheckboxSelected = enableConvertCheckingCheckbox.isSelected();
+        convertCheckingAmountField.setDisable(!isCheckboxSelected);
+        convertCheckingButton.setDisable(!isCheckboxSelected);
+    }
+
     @Override
     public void onTransactionSuccess() {
         // Update the checking balance label in the main window
         checkingBalanceLabel.setText("Balance: $" + checkingAccount.getBalance());
         convertBalanceLabel.setText("Balance: $" + convertAccount.getBalance());
+        convertCurrencyLabel.setText("Currency: " + convertAccount.getCurrency());
     }
 
     private void showTransactionPopup(String transactionType) {
@@ -193,12 +209,6 @@ public class BankAccountController implements TransactionListener {
     @FXML
     private void handleConvert() {
 
-        // Check if conversion is enabled (checkbox is checked)
-        if (!enableConvertCheckbox.isSelected()) {
-            showAlert("Conversion Disabled", "Please enable conversion to proceed.");
-            return;
-        }
-
         // Get the user input amount (you should validate the input)
         double userInputAmount;
         try {
@@ -214,6 +224,30 @@ public class BankAccountController implements TransactionListener {
             return;
         }
 
+        // Show the convert preview window
+        showConvertPreview(convertAccount.getConvertedAmount(userInputAmount,checkingAccount.getCurrency())
+                ,userInputAmount, checkingAccount, convertAccount, "ToConvert");
+    }
+
+    @FXML
+    private void handleConvertToChecking() {
+
+
+        // Get the user input amount (you should validate the input)
+        double userInputAmount;
+        try {
+            userInputAmount = Double.parseDouble(convertCheckingAmountField.getText());
+        } catch (NumberFormatException e) {
+            showAlert("Invalid Amount", "Please enter a valid numeric amount.");
+            return;
+        }
+
+        // Check if the user input amount exceeds the checking account balance
+        if (userInputAmount > convertAccount.getBalance()) {
+            showAlert("Insufficient Balance", "The amount exceeds your checking account balance.");
+            return;
+        }
+
         // Perform the conversion
         //checkingAccount.convertToConvert(userInputAmount, convertAccount);
 
@@ -221,8 +255,8 @@ public class BankAccountController implements TransactionListener {
         //refreshBalances(checkingAccount, convertAccount);
 
         // Show the convert preview window
-        showConvertPreview(convertAccount.getConvertedAmount(userInputAmount,checkingAccount.getCurrency())
-                ,userInputAmount, checkingAccount, convertAccount);
+        showConvertPreview(convertAccount.getConvertedAmountTo(userInputAmount,checkingAccount.getCurrency())
+                ,userInputAmount, checkingAccount, convertAccount,"ToChecking");
     }
 
     private void refreshBalances(CheckingAccount checkingAccount, SavingsAccount savingsAccount) {
@@ -231,7 +265,7 @@ public class BankAccountController implements TransactionListener {
         savingsBalanceLabel.setText("Balance: $" + savingsAccount.getBalance());
     }
 
-    private void showConvertPreview(double convertedAmount, double userInputAmount, CheckingAccount checkingAccount, ConvertAccount convertAccount) {
+    private void showConvertPreview(double convertedAmount, double userInputAmount, CheckingAccount checkingAccount, ConvertAccount convertAccount, String toAccount) {
         // Load the ConvertPreview.fxml file
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ConvertPreview.fxml"));
@@ -250,6 +284,7 @@ public class BankAccountController implements TransactionListener {
             previewController.setConvertedAmount(convertedAmount);
             previewController.setAmount(userInputAmount);
             previewController.setTransactionListener(this);
+            previewController.setToAccount(toAccount);
             previewController.setAccounts(checkingAccount, convertAccount);
 
             // Show the preview window
@@ -342,6 +377,92 @@ public class BankAccountController implements TransactionListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleConvertCurrency() {
+        showCurrencyConversionPopup(convertAccount);
+    }
+
+
+    private void showCurrencyConversionPopup(ConvertAccount convertAccount) {
+        try {
+            // Load the CurrencyConversionPopup.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CurrencyConversionPopup.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the pop-up window
+            Stage popupStage = new Stage();
+            popupStage.setTitle("Currency Conversion");
+            popupStage.setScene(new Scene(root));
+
+            // Set the pop-up window to be modal
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+
+            // Set controller for the pop-up
+            CurrencyConversionController popupController = loader.getController();
+            popupController.setConvertAccount(convertAccount);
+            popupController.setTransactionListener(this);
+
+
+            popupStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private CheckBox enableTransferCheckingCheckbox;
+
+    @FXML
+    private TextField transferCheckingAmountField;
+
+    @FXML
+    private Button transferCheckingButton;
+
+    @FXML
+    private void handleCheckboxChecinkgActionSavings() {
+        // Enable or disable the TextField and Button based on the checkbox state
+        boolean isCheckboxSelected = enableTransferCheckingCheckbox.isSelected();
+        transferCheckingAmountField.setDisable(!isCheckboxSelected);
+        transferCheckingButton.setDisable(!isCheckboxSelected);
+    }
+
+
+    @FXML
+    private void handleTransferFromSavings() {
+
+
+        // Check if transfer is enabled (checkbox is checked)
+        if (!enableTransferCheckingCheckbox.isSelected()) {
+            showAlert("Transfer Disabled", "Please enable transfer to proceed.");
+            return;
+        }
+
+        // Get the user input amount (you should validate the input)
+        double userInputAmount;
+        try {
+            userInputAmount = Double.parseDouble(transferCheckingAmountField.getText());
+        } catch (NumberFormatException e) {
+            showAlert("Invalid Amount", "Please enter a valid numeric amount.");
+            return;
+        }
+
+        // Check if the user input amount exceeds the checking account balance
+        if (userInputAmount > savingsAccount.getBalance()) {
+            showAlert("Insufficient Balance", "The amount exceeds your checking account balance.");
+            return;
+        }
+
+        // Perform the transfer
+       savingsAccount.ConvertToChecking(userInputAmount,checkingAccount);
+
+        // Refresh the displayed balances
+        refreshBalances(checkingAccount, savingsAccount);
+
+        // Show a confirmation or perform any other necessary actions
+        showAlert("Transfer Successful", "Money transferred to Checking Account.");
     }
 
 }

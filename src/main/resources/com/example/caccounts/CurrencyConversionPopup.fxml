@@ -1,0 +1,20 @@
+<!-- CurrencyConversionPopup.fxml -->
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.caccounts.CurrencyConversionController">
+
+    <Label text="New Currency:" />
+    <ComboBox fx:id="currencyComboBox"/>
+
+    <Label text="Password:" />
+    <PasswordField fx:id="passwordField" />
+
+    <Button text="Convert" onAction="#handleConvert" />
+</VBox>
