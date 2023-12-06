@@ -11,7 +11,8 @@ class Converter {
         exchangeRates = new HashMap<>();
         exchangeRates.put("USD", 1.0);  // Default: USD as base currency
         exchangeRates.put("EUR", 0.85); // Example exchange rate for EUR
-        exchangeRates.put("JPY", 110.0); // Example exchange rate for JPY
+        exchangeRates.put("JPY", 110.0);
+        exchangeRates.put("CAD", 0.85);// Example exchange rate for JPY
     }
 
     public double convert(double amount, String fromCurrency, String toCurrency) {

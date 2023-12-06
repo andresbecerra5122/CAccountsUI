@@ -12,7 +12,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.TextField?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.caccounts.BankAccountController">
+<?import javafx.scene.control.ScrollPane?>
+<ScrollPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.caccounts.BankAccountController">
+<VBox xmlns:fx="http://javafx.com/fxml">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="Sign Out" onAction="#handleSignOut" />
@@ -31,10 +33,18 @@
                 <Button text="Deposit" onAction="#handleDeposit" />
                 <VBox>
                     <Label text="Enable Conversion:" />
-                    <CheckBox fx:id="enableConvertCheckbox" onAction="#handleCheckboxAction" />
+                    <CheckBox fx:id="enableConvertCheckbox" onAction="#handleCheckboxActionConvert" />
                     <Label text="Enter Amount:" />
                     <TextField fx:id="convertAmountField" disable="true" />
                     <Button fx:id="convertButton" text="Convert" onAction="#handleConvert" disable="true" />
+                </VBox>
+
+                <VBox>
+                    <Label text="Enable Transfer Savings:" />
+                    <CheckBox fx:id="enableTransferCheckbox" onAction="#handleCheckboxActionSavings" />
+                    <Label text="Enter Amount:" />
+                    <TextField fx:id="transferAmountField" disable="true" />
+                    <Button fx:id="transferButton" text="Transfer to Savings" onAction="#handleTransfer" disable="true" />
                 </VBox>
                 <Label fx:id="messageLabel" />
             </VBox>
@@ -45,7 +55,10 @@
             <VBox>
                 <Label text="Balance: $" fx:id="convertBalanceLabel" />
                 <Label text="Currency: " fx:id="convertCurrencyLabel" />
-                <!-- Add other convert account-related components here -->
+
+                <Button text="Convert Withdraw" onAction="#handleConvertWithdraw" />
+                <Button text="Convert Deposit" onAction="#handleConvertDeposit" />
+
             </VBox>
         </Tab>
 
@@ -59,3 +72,4 @@
         </Tab>
     </TabPane>
 </VBox>
+</ScrollPane>

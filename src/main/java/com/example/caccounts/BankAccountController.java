@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 public class BankAccountController implements TransactionListener {
 
@@ -33,6 +34,21 @@ public class BankAccountController implements TransactionListener {
 
     @FXML
     private Label savingsCurrencyLabel;
+
+    @FXML
+    private TextField transferAmountField;
+    @FXML
+    private CheckBox enableTransferCheckbox;
+    @FXML
+    private Button transferButton;
+    @FXML
+    private TextField convertWithdrawAmountField;
+    @FXML
+    private TextField convertDepositAmountField;
+    @FXML
+    private Button convertWithdrawButton;
+    @FXML
+    private Button convertDepositButton;
 
     @FXML
     private Tab checkingTab;
@@ -123,11 +139,19 @@ public class BankAccountController implements TransactionListener {
     }
 
     @FXML
-    private void handleCheckboxAction() {
+    private void handleCheckboxActionConvert() {
         // Enable or disable the TextField and Button based on the checkbox state
         boolean isCheckboxSelected = enableConvertCheckbox.isSelected();
         convertAmountField.setDisable(!isCheckboxSelected);
         convertButton.setDisable(!isCheckboxSelected);
+    }
+
+    @FXML
+    private void handleCheckboxActionSavings() {
+        // Enable or disable the TextField and Button based on the checkbox state
+        boolean isCheckboxSelected = enableTransferCheckbox.isSelected();
+        transferAmountField.setDisable(!isCheckboxSelected);
+        transferButton.setDisable(!isCheckboxSelected);
     }
 
     @Override
@@ -152,8 +176,9 @@ public class BankAccountController implements TransactionListener {
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
             // Set controller for the pop-up
-            TransactionPopupController popupController = loader.getController();
-            popupController.initData(transactionType, checkingAccount);
+            TransactionConvertPopupController popupController = loader.getController();
+            popupController.setAccount( checkingAccount);
+            popupController.setTransactionType(transactionType);
             popupController.setTransactionListener(this);
 
 
@@ -200,10 +225,10 @@ public class BankAccountController implements TransactionListener {
                 ,userInputAmount, checkingAccount, convertAccount);
     }
 
-    private void refreshBalances(CheckingAccount checkingAccount, ConvertAccount convertAccount) {
+    private void refreshBalances(CheckingAccount checkingAccount, SavingsAccount savingsAccount) {
         // Update the displayed balances in the UI
         checkingBalanceLabel.setText("Balance: $" + checkingAccount.getBalance());
-        convertBalanceLabel.setText("Balance: $" + convertAccount.getBalance());
+        savingsBalanceLabel.setText("Balance: $" + savingsAccount.getBalance());
     }
 
     private void showConvertPreview(double convertedAmount, double userInputAmount, CheckingAccount checkingAccount, ConvertAccount convertAccount) {
@@ -241,4 +266,82 @@ public class BankAccountController implements TransactionListener {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    @FXML
+    private void handleTransfer() {
+
+
+        // Check if transfer is enabled (checkbox is checked)
+        if (!enableTransferCheckbox.isSelected()) {
+            showAlert("Transfer Disabled", "Please enable transfer to proceed.");
+            return;
+        }
+
+        // Get the user input amount (you should validate the input)
+        double userInputAmount;
+        try {
+            userInputAmount = Double.parseDouble(transferAmountField.getText());
+        } catch (NumberFormatException e) {
+            showAlert("Invalid Amount", "Please enter a valid numeric amount.");
+            return;
+        }
+
+        // Check if the user input amount exceeds the checking account balance
+        if (userInputAmount > checkingAccount.getBalance()) {
+            showAlert("Insufficient Balance", "The amount exceeds your checking account balance.");
+            return;
+        }
+
+        // Perform the transfer
+        checkingAccount.convertToSavings(userInputAmount, savingsAccount);
+
+        // Refresh the displayed balances
+        refreshBalances(checkingAccount, savingsAccount);
+
+        // Show a confirmation or perform any other necessary actions
+        showAlert("Transfer Successful", "Money transferred to Savings Account.");
+    }
+
+    @FXML
+    private void handleConvertWithdraw() {
+        showTransactionConvertPopup("Withdraw", "Convert");
+    }
+
+    @FXML
+    private void handleConvertDeposit() {
+        showTransactionConvertPopup("Deposit","Convert");
+    }
+
+    private void showTransactionConvertPopup(String transactionType, String account) {
+        try {
+            // Load the TransactionPopup.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("TransactionPopup.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the pop-up window
+            Stage popupStage = new Stage();
+            popupStage.setTitle(transactionType);
+            popupStage.setScene(new Scene(root));
+
+            // Set the pop-up window to be modal
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+
+            // Set controller for the pop-up
+            TransactionConvertPopupController popupController = loader.getController();
+            popupController.setTransactionType(transactionType);
+            popupController.setTransactionListener(this);
+            if(Objects.equals(account, "Convert")) {
+                popupController.setAccount(convertAccount); // pass the Convert Account to the pop-up controller
+            }
+            else {
+                popupController.setAccount(convertAccount); // pass the Convert Account to the pop-up controller
+            }
+            popupStage.showAndWait();
+
+            // You can handle the result from the pop-up (e.g., update the balance)
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
