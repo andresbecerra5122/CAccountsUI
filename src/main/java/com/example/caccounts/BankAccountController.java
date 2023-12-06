@@ -66,10 +66,10 @@ public class BankAccountController implements TransactionListener {
     @FXML
     private Button convertCheckingButton;
 
+    int decimalPlaces = 3;
+
 
     public void initialize() {
-        // You can initialize components or perform other actions when the view is loaded
-
         // Load account information based on the logged-in user
         String loggedInUser = UserSession.getInstance().getLoggedInUser();
 
@@ -84,14 +84,21 @@ public class BankAccountController implements TransactionListener {
         this.savingsAccount = savingsAccount;
 
         // Set balance and currency labels
-        checkingBalanceLabel.setText("Balance: $" + checkingAccount.getBalance());
+
+
+        checkingBalanceLabel.setText("Balance: $" + returnCorrectForma(checkingAccount.getBalance()));
         checkingCurrencyLabel.setText("Currency: " + checkingAccount.getCurrency());
 
-        convertBalanceLabel.setText("Balance: $" + convertAccount.getBalance());
+        convertBalanceLabel.setText("Balance: $" + returnCorrectForma(convertAccount.getBalance()));
         convertCurrencyLabel.setText("Currency: " + convertAccount.getCurrency());
 
-        savingsBalanceLabel.setText("Balance: $" + savingsAccount.getBalance());
+        savingsBalanceLabel.setText("Balance: $" + returnCorrectForma(savingsAccount.getBalance()));
         savingsCurrencyLabel.setText("Currency: " + savingsAccount.getCurrency());
+
+    }
+
+    private String returnCorrectForma(double balance) {
+       return  String.format("%." + decimalPlaces + "f", balance);
 
     }
 
@@ -172,8 +179,8 @@ public class BankAccountController implements TransactionListener {
     @Override
     public void onTransactionSuccess() {
         // Update the checking balance label in the main window
-        checkingBalanceLabel.setText("Balance: $" + checkingAccount.getBalance());
-        convertBalanceLabel.setText("Balance: $" + convertAccount.getBalance());
+        checkingBalanceLabel.setText("Balance: $" + returnCorrectForma(checkingAccount.getBalance()));
+        convertBalanceLabel.setText("Balance: $" + returnCorrectForma(convertAccount.getBalance()));
         convertCurrencyLabel.setText("Currency: " + convertAccount.getCurrency());
     }
 
@@ -261,8 +268,8 @@ public class BankAccountController implements TransactionListener {
 
     private void refreshBalances(CheckingAccount checkingAccount, SavingsAccount savingsAccount) {
         // Update the displayed balances in the UI
-        checkingBalanceLabel.setText("Balance: $" + checkingAccount.getBalance());
-        savingsBalanceLabel.setText("Balance: $" + savingsAccount.getBalance());
+        checkingBalanceLabel.setText("Balance: $" + returnCorrectForma(checkingAccount.getBalance()));
+        savingsBalanceLabel.setText("Balance: $" + returnCorrectForma(savingsAccount.getBalance()));
     }
 
     private void showConvertPreview(double convertedAmount, double userInputAmount, CheckingAccount checkingAccount, ConvertAccount convertAccount, String toAccount) {

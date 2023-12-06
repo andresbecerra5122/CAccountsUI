@@ -13,82 +13,98 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+
 <ScrollPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.caccounts.BankAccountController">
 <VBox xmlns:fx="http://javafx.com/fxml">
-    <MenuBar>
-        <Menu text="File">
-            <MenuItem text="Sign Out" onAction="#handleSignOut" />
-        </Menu>
-    </MenuBar>
+    <HBox >
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem text="Sign Out" onAction="#handleSignOut" />
+            </Menu>
+        </MenuBar>
+    </HBox>
 
-    <TabPane tabClosingPolicy="UNAVAILABLE">
-        <!-- Tab 1: Checking Account -->
-        <Tab text="Checking Account">
-            <VBox>
-                <Label text="Balance: $" fx:id="checkingBalanceLabel" />
-                <Label text="Currency: " fx:id="checkingCurrencyLabel" />
-                <!-- Add other checking account-related components here -->
+    <HBox >
+        <TabPane styleClass="your-tabpane-style" tabClosingPolicy="UNAVAILABLE"  >
+            <!-- Tab 1: Checking Account -->
+            <Tab text="Checking Account">
+                <VBox>
+                    <Label styleClass="header-label" text="Balance: $" fx:id="checkingBalanceLabel" />
+                    <Label styleClass="header-label" text="Currency: " fx:id="checkingCurrencyLabel" />
+                    <!-- Add other checking account-related components here -->
+                    <Separator orientation="HORIZONTAL" />
+                    <HBox spacing="10" alignment="CENTER">
+                    <Button text="Withdraw" onAction="#handleWithdraw" />
+                    <Button text="Deposit" onAction="#handleDeposit" />
+                    </HBox>
+                    <Separator orientation="HORIZONTAL" />
+                    <VBox>
+                        <Label text="Enable Conversion:" />
+                        <CheckBox fx:id="enableConvertCheckbox" onAction="#handleCheckboxActionConvert" />
+                        <Label text="Enter Amount:" />
+                        <TextField fx:id="convertAmountField" disable="true" />
+                        <Button fx:id="convertButton" text="Convert" onAction="#handleConvert" disable="true" />
+                    </VBox>
+                    <Separator orientation="HORIZONTAL" />
+                    <VBox>
+                        <Label text="Enable Transfer Savings:" />
+                        <CheckBox fx:id="enableTransferCheckbox" onAction="#handleCheckboxActionSavings" />
+                        <Label text="Enter Amount:" />
+                        <TextField fx:id="transferAmountField" disable="true" />
+                        <Button fx:id="transferButton" text="Transfer to Checking" onAction="#handleTransfer" disable="true" />
+                    </VBox>
+                    <Label fx:id="messageLabel" />
+                </VBox>
+            </Tab>
 
-                <Button text="Withdraw" onAction="#handleWithdraw" />
-                <Button text="Deposit" onAction="#handleDeposit" />
+            <!-- Tab 2: Convert Account -->
+            <Tab text="Convert Account">
+                <VBox>
+                <VBox>
+                    <Label styleClass="header-label" text="Balance: $" fx:id="convertBalanceLabel" />
+                    <Label styleClass="header-label" text="Currency: " fx:id="convertCurrencyLabel" />
+                    <Separator orientation="HORIZONTAL" />
+                    <HBox spacing="10" alignment="CENTER">
+                    <Button text="Convert Withdraw" onAction="#handleConvertWithdraw" />
+                    <Button text="Convert Deposit" onAction="#handleConvertDeposit" />
+                    </HBox>
+                    <Separator orientation="HORIZONTAL" />
+                    <CheckBox fx:id="currencyConversionCheckBox" text="Enable Currency Conversion" />
+                    <Button text="Convert Currency" onAction="#handleConvertCurrency" disable="${currencyConversionCheckBox.selected}" />
+
+
+                </VBox>
+                    <Separator orientation="HORIZONTAL" />
                 <VBox>
                     <Label text="Enable Conversion:" />
-                    <CheckBox fx:id="enableConvertCheckbox" onAction="#handleCheckboxActionConvert" />
+                    <CheckBox fx:id="enableConvertCheckingCheckbox" onAction="#handleCheckboxCheckingActionConvert" />
                     <Label text="Enter Amount:" />
-                    <TextField fx:id="convertAmountField" disable="true" />
-                    <Button fx:id="convertButton" text="Convert" onAction="#handleConvert" disable="true" />
+                    <TextField fx:id="convertCheckingAmountField" disable="true" />
+                    <Button fx:id="convertCheckingButton" text="Convert" onAction="#handleConvertToChecking" disable="true" />
                 </VBox>
+                    <Separator orientation="HORIZONTAL" />
+                </VBox>
+            </Tab>
 
+            <!-- Tab 3: Savings Account -->
+            <Tab text="Savings Account">
                 <VBox>
-                    <Label text="Enable Transfer Savings:" />
-                    <CheckBox fx:id="enableTransferCheckbox" onAction="#handleCheckboxActionSavings" />
-                    <Label text="Enter Amount:" />
-                    <TextField fx:id="transferAmountField" disable="true" />
-                    <Button fx:id="transferButton" text="Transfer to Checking" onAction="#handleTransfer" disable="true" />
+                    <Label styleClass="header-label" text="Balance: $" fx:id="savingsBalanceLabel" />
+                    <Label styleClass="header-label" text="Currency: " fx:id="savingsCurrencyLabel" />
+                    <Separator orientation="HORIZONTAL" />
+                    <VBox>
+                        <Label text="Enable Transfer Savings:" />
+                        <CheckBox fx:id="enableTransferCheckingCheckbox" onAction="#handleCheckboxChecinkgActionSavings" />
+                        <Label text="Enter Amount:" />
+                        <TextField fx:id="transferCheckingAmountField" disable="true" />
+                        <Button fx:id="transferCheckingButton" text="Transfer to Savings" onAction="#handleTransferFromSavings" disable="true" />
+                    </VBox>
+                    <Separator orientation="HORIZONTAL" />
                 </VBox>
-                <Label fx:id="messageLabel" />
-            </VBox>
-        </Tab>
-
-        <!-- Tab 2: Convert Account -->
-        <Tab text="Convert Account">
-            <VBox>
-            <VBox>
-                <Label text="Balance: $" fx:id="convertBalanceLabel" />
-                <Label text="Currency: " fx:id="convertCurrencyLabel" />
-
-                <Button text="Convert Withdraw" onAction="#handleConvertWithdraw" />
-                <Button text="Convert Deposit" onAction="#handleConvertDeposit" />
-
-                <CheckBox fx:id="currencyConversionCheckBox" text="Enable Currency Conversion" />
-                <Button text="Convert Currency" onAction="#handleConvertCurrency" disable="${currencyConversionCheckBox.selected}" />
-
-
-            </VBox>
-            <VBox>
-                <Label text="Enable Conversion:" />
-                <CheckBox fx:id="enableConvertCheckingCheckbox" onAction="#handleCheckboxCheckingActionConvert" />
-                <Label text="Enter Amount:" />
-                <TextField fx:id="convertCheckingAmountField" disable="true" />
-                <Button fx:id="convertCheckingButton" text="Convert" onAction="#handleConvertToChecking" disable="true" />
-            </VBox>
-            </VBox>
-        </Tab>
-
-        <!-- Tab 3: Savings Account -->
-        <Tab text="Savings Account">
-            <VBox>
-                <Label text="Balance: $" fx:id="savingsBalanceLabel" />
-                <Label text="Currency: " fx:id="savingsCurrencyLabel" />
-                <VBox>
-                    <Label text="Enable Transfer Savings:" />
-                    <CheckBox fx:id="enableTransferCheckingCheckbox" onAction="#handleCheckboxChecinkgActionSavings" />
-                    <Label text="Enter Amount:" />
-                    <TextField fx:id="transferCheckingAmountField" disable="true" />
-                    <Button fx:id="transferCheckingButton" text="Transfer to Savings" onAction="#handleTransferFromSavings" disable="true" />
-                </VBox>
-            </VBox>
-        </Tab>
-    </TabPane>
+            </Tab>
+        </TabPane>
+    </HBox>
 </VBox>
 </ScrollPane>
