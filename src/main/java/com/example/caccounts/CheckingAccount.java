@@ -14,7 +14,7 @@ public class CheckingAccount extends BankAccount {
     }
     public void convertToSavings(double amount, SavingsAccount savingsAccount) {
         if (amount <= getBalance()) {
-            setBalance(getBalance() + amount);
+            setBalance(getBalance() - amount);
             savingsAccount.deposit(amount);
             System.out.println("Conversion to savings account successful.");
         } else {
