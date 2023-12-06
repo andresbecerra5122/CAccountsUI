@@ -58,9 +58,13 @@ public class HelloController {
 
             // Set any data or perform initialization in the BankAccountController if needed
 
+
             Stage stage = new Stage();
             stage.setTitle("Bank Account View");
             stage.setScene(new Scene(root, 400, 300));
+            String css = getClass().getResource("styles.css").toExternalForm();
+            stage.getScene().getStylesheets().add(css);
+
             stage.show();
 
             // Close the login window (optional)
