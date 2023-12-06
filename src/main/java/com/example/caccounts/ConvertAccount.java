@@ -49,4 +49,30 @@ public class ConvertAccount extends BankAccount {
         return converter.convert(amount, currency, getCurrency());
 
     }
+
+    public double getConvertedAmountTo(double amount, String currency) {
+
+        return converter.convert(amount, getCurrency(), currency);
+
+    }
+
+    public void convertCurrency(String newCurrency) {
+
+
+            // Convert the amount to the target currency
+            double convertedAmount = converter.convert(getBalance(), getCurrency(), newCurrency);
+
+            // Update the balance with the converted amount
+            setBalance(convertedAmount);
+            setCurrency(newCurrency);
+
+
+    }
+
+    public void convertToChecking(double amount, CheckingAccount checkingAccount) {
+
+        withdraw(amount);
+        double convertedamount = converter.convert(amount, getCurrency(), checkingAccount.getCurrency());
+        checkingAccount.deposit(convertedamount);
+    }
 }

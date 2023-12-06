@@ -44,7 +44,7 @@
                     <CheckBox fx:id="enableTransferCheckbox" onAction="#handleCheckboxActionSavings" />
                     <Label text="Enter Amount:" />
                     <TextField fx:id="transferAmountField" disable="true" />
-                    <Button fx:id="transferButton" text="Transfer to Savings" onAction="#handleTransfer" disable="true" />
+                    <Button fx:id="transferButton" text="Transfer to Checking" onAction="#handleTransfer" disable="true" />
                 </VBox>
                 <Label fx:id="messageLabel" />
             </VBox>
@@ -53,12 +53,25 @@
         <!-- Tab 2: Convert Account -->
         <Tab text="Convert Account">
             <VBox>
+            <VBox>
                 <Label text="Balance: $" fx:id="convertBalanceLabel" />
                 <Label text="Currency: " fx:id="convertCurrencyLabel" />
 
                 <Button text="Convert Withdraw" onAction="#handleConvertWithdraw" />
                 <Button text="Convert Deposit" onAction="#handleConvertDeposit" />
 
+                <CheckBox fx:id="currencyConversionCheckBox" text="Enable Currency Conversion" />
+                <Button text="Convert Currency" onAction="#handleConvertCurrency" disable="${currencyConversionCheckBox.selected}" />
+
+
+            </VBox>
+            <VBox>
+                <Label text="Enable Conversion:" />
+                <CheckBox fx:id="enableConvertCheckingCheckbox" onAction="#handleCheckboxCheckingActionConvert" />
+                <Label text="Enter Amount:" />
+                <TextField fx:id="convertCheckingAmountField" disable="true" />
+                <Button fx:id="convertCheckingButton" text="Convert" onAction="#handleConvertToChecking" disable="true" />
+            </VBox>
             </VBox>
         </Tab>
 
@@ -67,7 +80,13 @@
             <VBox>
                 <Label text="Balance: $" fx:id="savingsBalanceLabel" />
                 <Label text="Currency: " fx:id="savingsCurrencyLabel" />
-                <!-- Add other savings account-related components here -->
+                <VBox>
+                    <Label text="Enable Transfer Savings:" />
+                    <CheckBox fx:id="enableTransferCheckingCheckbox" onAction="#handleCheckboxChecinkgActionSavings" />
+                    <Label text="Enter Amount:" />
+                    <TextField fx:id="transferCheckingAmountField" disable="true" />
+                    <Button fx:id="transferCheckingButton" text="Transfer to Savings" onAction="#handleTransferFromSavings" disable="true" />
+                </VBox>
             </VBox>
         </Tab>
     </TabPane>
