@@ -47,4 +47,8 @@ public class BankAccount {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+    public String getUserSession() {
+        return userSession;
+    }
 }

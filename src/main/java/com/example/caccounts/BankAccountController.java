@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.example.caccounts.BankAccountData.saveAccountData;
+
 public class BankAccountController implements TransactionListener {
     @FXML
     public CheckBox currencyConversionCheckBox;
@@ -69,11 +71,13 @@ public class BankAccountController implements TransactionListener {
     int decimalPlaces = 3;
 
 
+    Map<String, BankAccount> accountData;
+
     public void initialize() {
         // Load account information based on the logged-in user
         String loggedInUser = UserSession.getInstance().getLoggedInUser();
 
-        Map<String, BankAccount> accountData = BankAccountData.getAccountData();
+        accountData = BankAccountData.getAccountData(loggedInUser);
 
         // Get accounts for the logged-in user
         CheckingAccount checkingAccount = (CheckingAccount) accountData.get("Checking");
@@ -114,8 +118,8 @@ public class BankAccountController implements TransactionListener {
 
     @FXML
     private void handleSignOut() {
-        // You can perform any additional cleanup or logic before signing out
-
+        
+        BankAccountData.saveAccountData(checkingAccount.getUserSession(), accountData);
         // Close the current BankAccountUI window
         Stage currentStage = (Stage) checkingBalanceLabel.getScene().getWindow();
         currentStage.close();
