@@ -77,7 +77,7 @@ public class BankAccountData {
         return userAccountData.get(username);
     }
 
-    public static void saveAccountData(String username, Map<String, BankAccount> accounts) {
+ /*   public static void saveAccountData(String username, Map<String, BankAccount> accounts) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ACCOUNTS_FILE, true))) {
             for (Map.Entry<String, BankAccount> entry : accounts.entrySet()) {
                 BankAccount account = entry.getValue();
@@ -89,5 +89,34 @@ public class BankAccountData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
+ public static void saveAccountData(String username, Map<String, BankAccount> accounts) {
+     try {
+         // Read existing data
+         StringBuilder fileContent = new StringBuilder();
+         try (BufferedReader reader = new BufferedReader(new FileReader(ACCOUNTS_FILE))) {
+             String line;
+             while ((line = reader.readLine()) != null) {
+                 // Exclude lines related to the specified username
+                 if (!line.startsWith(username + ":")) {
+                     fileContent.append(line).append("\n");
+                 }
+             }
+         }
+
+         // Append new data
+         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ACCOUNTS_FILE))) {
+             writer.write(fileContent.toString());  // Write existing data (excluding the specified username)
+             for (Map.Entry<String, BankAccount> entry : accounts.entrySet()) {
+                 BankAccount account = entry.getValue();
+                 String newLine = String.format("%s:%s:%.2f:%s:%s",
+                         username, entry.getKey(), account.getBalance(), account.getCurrency(), account.getUserSession());
+                 writer.write(newLine);
+                 writer.newLine();
+             }
+         }
+     } catch (IOException e) {
+         e.printStackTrace();
+     }
+ }
 }
