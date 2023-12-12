@@ -1,3 +1,5 @@
-username1:password1
-username2:password2
+JohnDoe:password1
+JaneDoe:password2
 abdullah:1234
+edgar:1234
+pamela:1234

@@ -77,7 +77,9 @@ public class BankAccountController implements TransactionListener {
         // Load account information based on the logged-in user
         String loggedInUser = UserSession.getInstance().getLoggedInUser();
 
+        BankAccountData.loadAccountData();
         accountData = BankAccountData.getAccountData(loggedInUser);
+
 
         // Get accounts for the logged-in user
         CheckingAccount checkingAccount = (CheckingAccount) accountData.get("Checking");
