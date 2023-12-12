@@ -6,4 +6,10 @@ JaneDoe:Convert:1000.00:EUR:JaneDoe
 JaneDoe:Savings:3000.00:USD:JaneDoe
 abdullah:Savings:5000.00:USD:abdullah
 abdullah:Convert:750.00:EUR:abdullah
-abdullah:Checking:500.00:USD:abdullah
+abdullah:Checking:1000.00:USD:abdullah
+edgar:Savings:0.00:USD:edgar
+edgar:Convert:0.00:EUR:edgar
+edgar:Checking:1234.00:USD:edgar
+pamela:Savings:0.00:USD:pamela
+pamela:Convert:0.00:EUR:pamela
+pamela:Checking:200.00:USD:pamela

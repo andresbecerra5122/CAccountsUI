@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
 
+<?import javafx.scene.control.Separator?>
 <GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.caccounts.HelloController">
   <padding>
     <javafx.geometry.Insets top="25" right="25" bottom="25" left="25"/>
@@ -18,4 +19,8 @@
   <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
   <Button text="Login" onAction="#handleLogin" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+  <Separator orientation="HORIZONTAL" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+  <Label text="Create New User" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+  <Button text="Create User" onAction="#handleCreateUserWindow" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
 </GridPane>

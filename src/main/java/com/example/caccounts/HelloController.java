@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -43,12 +44,14 @@ public class HelloController {
 
             // Load the BankAccountUI.fxml and set it as the new scene
             loadBankAccountView();
+            Stage loginStage = (Stage) usernameField.getScene().getWindow();
+            loginStage.close();
         } else {
             System.out.println("Login failed. Please check your credentials.");
         }
     }
 
-    private void loadBankAccountView() {
+    public void loadBankAccountView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("BankAccountUI.fxml"));
             Parent root = loader.load();
@@ -67,9 +70,28 @@ public class HelloController {
 
             stage.show();
 
-            // Close the login window (optional)
-            Stage loginStage = (Stage) usernameField.getScene().getWindow();
-            loginStage.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleCreateUserWindow() {
+        try {
+            // Load the CreateUserView.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CreateUserView.fxml"));
+            Parent root = loader.load();
+
+            // Create a new stage for the create user window
+            Stage createUserStage = new Stage();
+            createUserStage.setTitle("Create New User");
+            createUserStage.setScene(new Scene(root));
+
+            // Set the window to be modal
+            createUserStage.initModality(Modality.APPLICATION_MODAL);
+
+            // Show the create user window
+            createUserStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
