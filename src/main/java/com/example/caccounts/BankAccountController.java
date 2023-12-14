@@ -2,6 +2,7 @@
 package com.example.caccounts;
 
 import com.CAccounts.UserSession;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,12 +11,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.example.caccounts.BankAccountData.saveAccountData;
+import java.util.Optional;
 
 public class BankAccountController implements TransactionListener {
     @FXML
@@ -44,17 +45,15 @@ public class BankAccountController implements TransactionListener {
     private CheckBox enableTransferCheckbox;
     @FXML
     private Button transferButton;
-    @FXML
-    private TextField convertWithdrawAmountField;
-    @FXML
-    private TextField convertDepositAmountField;
-    @FXML
-    private Button convertWithdrawButton;
-    @FXML
-    private Button convertDepositButton;
 
     @FXML
-    private Tab checkingTab;
+    private CheckBox enableTransferCheckingCheckbox;
+
+    @FXML
+    private TextField transferCheckingAmountField;
+
+    @FXML
+    private Button transferCheckingButton;
     @FXML
     private TextField convertAmountField;
     @FXML
@@ -67,11 +66,20 @@ public class BankAccountController implements TransactionListener {
     private TextField convertCheckingAmountField;
     @FXML
     private Button convertCheckingButton;
-
+    private Stage stage;
     int decimalPlaces = 3;
 
-
     Map<String, BankAccount> accountData;
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                handleCloseRequest(event);
+            }
+        });
+    }
 
     public void initialize() {
         // Load account information based on the logged-in user
@@ -89,23 +97,20 @@ public class BankAccountController implements TransactionListener {
         SavingsAccount savingsAccount = (SavingsAccount) accountData.get("Savings");
         this.savingsAccount = savingsAccount;
 
-        // Set balance and currency labels
-
-
-        checkingBalanceLabel.setText("Balance: $" + returnCorrectForma(checkingAccount.getBalance()));
+        checkingBalanceLabel.setText("Balance: $" + returnCorrectFormat(checkingAccount.getBalance()));
         checkingCurrencyLabel.setText("Currency: " + checkingAccount.getCurrency());
 
-        convertBalanceLabel.setText("Balance: $" + returnCorrectForma(convertAccount.getBalance()));
+        convertBalanceLabel.setText("Balance: $" + returnCorrectFormat(convertAccount.getBalance()));
         convertCurrencyLabel.setText("Currency: " + convertAccount.getCurrency());
 
-        savingsBalanceLabel.setText("Balance: $" + returnCorrectForma(savingsAccount.getBalance()));
+        savingsBalanceLabel.setText("Balance: $" + returnCorrectFormat(savingsAccount.getBalance()));
         savingsCurrencyLabel.setText("Currency: " + savingsAccount.getCurrency());
 
     }
 
-    private String returnCorrectForma(double balance) {
-       return  String.format("%." + decimalPlaces + "f", balance);
+    private String returnCorrectFormat(double balance) {
 
+       return  String.format("%." + decimalPlaces + "f", balance);
     }
 
     private CheckingAccount checkingAccount;
@@ -113,10 +118,6 @@ public class BankAccountController implements TransactionListener {
     private ConvertAccount convertAccount;
 
     private SavingsAccount savingsAccount;
-
-    public void setCheckingAccount(CheckingAccount checkingAccount) {
-        this.checkingAccount = checkingAccount;
-    }
 
     @FXML
     private void handleSignOut() {
@@ -126,22 +127,19 @@ public class BankAccountController implements TransactionListener {
         Stage currentStage = (Stage) checkingBalanceLabel.getScene().getWindow();
         currentStage.close();
 
-        // Open the login window
         openLoginWindow();
     }
 
     private void openLoginWindow() {
         try {
-            // Load the LoginUI.fxml file
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
             Parent root = loader.load();
 
-            // Create a new stage and set the scene
             Stage stage = new Stage();
             stage.setTitle("Login");
             stage.setScene(new Scene(root));
 
-            // Show the login window
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -185,8 +183,8 @@ public class BankAccountController implements TransactionListener {
     @Override
     public void onTransactionSuccess() {
         // Update the checking balance label in the main window
-        checkingBalanceLabel.setText("Balance: $" + returnCorrectForma(checkingAccount.getBalance()));
-        convertBalanceLabel.setText("Balance: $" + returnCorrectForma(convertAccount.getBalance()));
+        checkingBalanceLabel.setText("Balance: $" + returnCorrectFormat(checkingAccount.getBalance()));
+        convertBalanceLabel.setText("Balance: $" + returnCorrectFormat(convertAccount.getBalance()));
         convertCurrencyLabel.setText("Currency: " + convertAccount.getCurrency());
     }
 
@@ -210,10 +208,8 @@ public class BankAccountController implements TransactionListener {
             popupController.setTransactionType(transactionType);
             popupController.setTransactionListener(this);
 
-
             popupStage.showAndWait();
 
-            // You can handle the result from the pop-up (e.g., update the balance)
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -231,13 +227,11 @@ public class BankAccountController implements TransactionListener {
             return;
         }
 
-        // Check if the user input amount exceeds the checking account balance
         if (userInputAmount > checkingAccount.getBalance()) {
             showAlert("Insufficient Balance", "The amount exceeds your checking account balance.");
             return;
         }
 
-        // Show the convert preview window
         showConvertPreview(convertAccount.getConvertedAmount(userInputAmount,checkingAccount.getCurrency())
                 ,userInputAmount, checkingAccount, convertAccount, "ToConvert");
     }
@@ -245,8 +239,6 @@ public class BankAccountController implements TransactionListener {
     @FXML
     private void handleConvertToChecking() {
 
-
-        // Get the user input amount (you should validate the input)
         double userInputAmount;
         try {
             userInputAmount = Double.parseDouble(convertCheckingAmountField.getText());
@@ -261,12 +253,6 @@ public class BankAccountController implements TransactionListener {
             return;
         }
 
-        // Perform the conversion
-        //checkingAccount.convertToConvert(userInputAmount, convertAccount);
-
-        // Refresh the displayed balances
-        //refreshBalances(checkingAccount, convertAccount);
-
         // Show the convert preview window
         showConvertPreview(convertAccount.getConvertedAmountTo(userInputAmount,checkingAccount.getCurrency())
                 ,userInputAmount, checkingAccount, convertAccount,"ToChecking");
@@ -274,12 +260,12 @@ public class BankAccountController implements TransactionListener {
 
     private void refreshBalances(CheckingAccount checkingAccount, SavingsAccount savingsAccount) {
         // Update the displayed balances in the UI
-        checkingBalanceLabel.setText("Balance: $" + returnCorrectForma(checkingAccount.getBalance()));
-        savingsBalanceLabel.setText("Balance: $" + returnCorrectForma(savingsAccount.getBalance()));
+        checkingBalanceLabel.setText("Balance: $" + returnCorrectFormat(checkingAccount.getBalance()));
+        savingsBalanceLabel.setText("Balance: $" + returnCorrectFormat(savingsAccount.getBalance()));
     }
 
     private void showConvertPreview(double convertedAmount, double userInputAmount, CheckingAccount checkingAccount, ConvertAccount convertAccount, String toAccount) {
-        // Load the ConvertPreview.fxml file
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ConvertPreview.fxml"));
             Parent root = loader.load();
@@ -292,7 +278,6 @@ public class BankAccountController implements TransactionListener {
             // Set the preview window to be modal
             previewStage.initModality(Modality.APPLICATION_MODAL);
 
-            // Set controller for the preview window
             ConvertPreviewController previewController = loader.getController();
             previewController.setConvertedAmount(convertedAmount);
             previewController.setAmount(userInputAmount);
@@ -300,7 +285,6 @@ public class BankAccountController implements TransactionListener {
             previewController.setToAccount(toAccount);
             previewController.setAccounts(checkingAccount, convertAccount);
 
-            // Show the preview window
             previewStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -308,6 +292,7 @@ public class BankAccountController implements TransactionListener {
     }
 
     private void showAlert(String title, String content) {
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -318,14 +303,11 @@ public class BankAccountController implements TransactionListener {
     @FXML
     private void handleTransfer() {
 
-
-        // Check if transfer is enabled (checkbox is checked)
         if (!enableTransferCheckbox.isSelected()) {
             showAlert("Transfer Disabled", "Please enable transfer to proceed.");
             return;
         }
 
-        // Get the user input amount (you should validate the input)
         double userInputAmount;
         try {
             userInputAmount = Double.parseDouble(transferAmountField.getText());
@@ -340,13 +322,11 @@ public class BankAccountController implements TransactionListener {
             return;
         }
 
-        // Perform the transfer
         checkingAccount.convertToSavings(userInputAmount, savingsAccount);
 
         // Refresh the displayed balances
         refreshBalances(checkingAccount, savingsAccount);
 
-        // Show a confirmation or perform any other necessary actions
         showAlert("Transfer Successful", "Money transferred to Savings Account.");
     }
 
@@ -362,31 +342,27 @@ public class BankAccountController implements TransactionListener {
 
     private void showTransactionConvertPopup(String transactionType, String account) {
         try {
-            // Load the TransactionPopup.fxml file
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("TransactionPopup.fxml"));
             Parent root = loader.load();
 
-            // Create a new stage for the pop-up window
             Stage popupStage = new Stage();
             popupStage.setTitle(transactionType);
             popupStage.setScene(new Scene(root));
 
-            // Set the pop-up window to be modal
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
-            // Set controller for the pop-up
             TransactionConvertPopupController popupController = loader.getController();
             popupController.setTransactionType(transactionType);
             popupController.setTransactionListener(this);
             if(Objects.equals(account, "Convert")) {
-                popupController.setAccount(convertAccount); // pass the Convert Account to the pop-up controller
+                popupController.setAccount(convertAccount);
             }
             else {
-                popupController.setAccount(convertAccount); // pass the Convert Account to the pop-up controller
+                popupController.setAccount(convertAccount);
             }
             popupStage.showAndWait();
 
-            // You can handle the result from the pop-up (e.g., update the balance)
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -426,16 +402,8 @@ public class BankAccountController implements TransactionListener {
     }
 
     @FXML
-    private CheckBox enableTransferCheckingCheckbox;
-
-    @FXML
-    private TextField transferCheckingAmountField;
-
-    @FXML
-    private Button transferCheckingButton;
-
-    @FXML
     private void handleCheckboxChecinkgActionSavings() {
+
         // Enable or disable the TextField and Button based on the checkbox state
         boolean isCheckboxSelected = enableTransferCheckingCheckbox.isSelected();
         transferCheckingAmountField.setDisable(!isCheckboxSelected);
@@ -446,14 +414,11 @@ public class BankAccountController implements TransactionListener {
     @FXML
     private void handleTransferFromSavings() {
 
-
-        // Check if transfer is enabled (checkbox is checked)
         if (!enableTransferCheckingCheckbox.isSelected()) {
             showAlert("Transfer Disabled", "Please enable transfer to proceed.");
             return;
         }
 
-        // Get the user input amount (you should validate the input)
         double userInputAmount;
         try {
             userInputAmount = Double.parseDouble(transferCheckingAmountField.getText());
@@ -462,20 +427,34 @@ public class BankAccountController implements TransactionListener {
             return;
         }
 
-        // Check if the user input amount exceeds the checking account balance
         if (userInputAmount > savingsAccount.getBalance()) {
             showAlert("Insufficient Balance", "The amount exceeds your checking account balance.");
             return;
         }
 
-        // Perform the transfer
        savingsAccount.ConvertToChecking(userInputAmount,checkingAccount);
 
-        // Refresh the displayed balances
         refreshBalances(checkingAccount, savingsAccount);
 
-        // Show a confirmation or perform any other necessary actions
         showAlert("Transfer Successful", "Money transferred to Checking Account.");
+    }
+
+    private void handleCloseRequest(WindowEvent event) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Closing Bank Account");
+        alert.setContentText("Are you sure you want to close your bank account?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            BankAccountData.saveAccountData(checkingAccount.getUserSession(), accountData);
+            Stage currentStage = this.stage;
+            currentStage.close();
+        } else {
+
+            event.consume();
+        }
     }
 
 }

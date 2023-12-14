@@ -67,6 +67,9 @@ public class HelloController {
             stage.setScene(new Scene(root, 400, 300));
             String css = getClass().getResource("styles.css").toExternalForm();
             stage.getScene().getStylesheets().add(css);
+            stage.setResizable(false);
+            bankAccountController.setStage(stage);
+
 
             stage.show();
 
@@ -92,13 +95,12 @@ public class HelloController {
 
             // Show the create user window
             createUserStage.showAndWait();
+
+            Stage loginStage = (Stage) usernameField.getScene().getWindow();
+            loginStage.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
     }
 }
