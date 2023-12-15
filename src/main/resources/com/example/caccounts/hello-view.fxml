@@ -11,16 +11,17 @@
   <padding>
     <javafx.geometry.Insets top="25" right="25" bottom="25" left="25"/>
   </padding>
+  <Label fx:id="errorMessageLabel" text="Wrong username or password." visible="false" style="-fx-text-fill: red;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-  <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-  <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+  <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+  <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-  <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-  <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+  <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+  <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-  <Button text="Login" onAction="#handleLogin" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-  <Separator orientation="HORIZONTAL" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-  <Label text="Create New User" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-  <Button text="Create User" onAction="#handleCreateUserWindow" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+  <Button text="Login" onAction="#handleLogin" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+  <Separator orientation="HORIZONTAL" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+  <Label text="Create New User" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+  <Button text="Create User" onAction="#handleCreateUserWindow" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
 </GridPane>

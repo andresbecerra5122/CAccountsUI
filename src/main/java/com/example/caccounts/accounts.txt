@@ -1,9 +1,0 @@
-Abdullah:Checking:1000.00:USD:Abdullah
-Abdullah:Convert:750.00:EUR:Abdullah
-Abdullah:Savings:5000.00:USD:Abdullah
-JohnDoe:Checking:1500.00:USD:JohnDoe
-JohnDoe:Convert:500.00:EUR:JohnDoe
-JohnDoe:Savings:2000.00:USD:JohnDoe
-JaneDoe:Checking:2000.00:USD:JaneDoe
-JaneDoe:Convert:1000.00:EUR:JaneDoe
-JaneDoe:Savings:3000.00:USD:JaneDoe
