@@ -26,8 +26,27 @@ public class HelloController {
 
     private UserAuthentication userAuthentication;
 
+    @FXML
+    private Label errorMessageLabel;
+
     public void setUserAuthentication(UserAuthentication userAuthentication) {
         this.userAuthentication = userAuthentication;
+    }
+
+    @FXML
+    private void initialize() {
+
+        usernameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                errorMessageLabel.setVisible(false);
+            }
+        });
+
+        passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                errorMessageLabel.setVisible(false);
+            }
+        });
     }
 
     @FXML
@@ -38,6 +57,7 @@ public class HelloController {
         UserAuthentication userAuthentication = new UserAuthentication();
         if (userAuthentication.authenticateUser(username, password)) {
             System.out.println("Login successful andres!");
+            errorMessageLabel.setVisible(false);
 
             // Set the user in the session
             UserSession.getInstance().setLoggedInUser(username);
@@ -47,6 +67,7 @@ public class HelloController {
             Stage loginStage = (Stage) usernameField.getScene().getWindow();
             loginStage.close();
         } else {
+            errorMessageLabel.setVisible(true);
             System.out.println("Login failed. Please check your credentials.");
         }
     }
